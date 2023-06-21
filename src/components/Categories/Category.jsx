@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
-import { useGetCategoryQuery } from "../../features/api/apiSlice";
+import { useGetCategoryQuery } from '../../features/api/apiSlice';
 
-import styles from "../../styles/Category.module.css";
+import styles from '../../styles/Category.module.css';
 
-
-import Products from "../Products/Products";
+import Products from '../Products/Products';
 
 const Category = () => {
   const { name } = useParams();
   const { list } = useSelector(({ categories }) => categories);
 
   const defaultValues = {
-    title: "",
+    title: '',
     price_min: 0,
     price_max: 0,
   };
@@ -25,23 +24,24 @@ const Category = () => {
     ...defaultValues,
   };
 
-
-
   const [isEnd, setEnd] = useState(false);
-  const [cat, setCat] = useState("");
+  const [cat, setCat] = useState('');
   const [items, setItems] = useState([]);
-  const [values, setValues] = useState(defaultValues);
+
   const [params, setParams] = useState(defaultParams);
 
-  const { data = [], isLoading, isSuccess } = useGetCategoryQuery({category: name});
+  const {
+    data = [],
+    isLoading,
+    isSuccess,
+  } = useGetCategoryQuery({ category: name });
 
   useEffect(() => {
     if (!name) return;
 
-    setValues(defaultValues);
     setItems([]);
     setEnd(false);
-    setParams({ ...defaultParams, categoryName: name});
+    setParams({ ...defaultParams, categoryName: name });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name]);
 
@@ -56,25 +56,12 @@ const Category = () => {
   useEffect(() => {
     if (!name || !list.length) return;
 
-    const category = list.find((item) => item === name );
+    const category = list.find((item) => item === name);
 
     setCat(category);
   }, [list, name]);
 
-  const handleChange = ({ target: { value, name } }) => {
-    setValues({ ...values, [name]: value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    setItems([]);
-    setEnd(false);
-    setParams({ ...defaultParams, ...values });
-  };
-
   const handleReset = () => {
-    setValues(defaultValues);
     setParams(defaultParams);
     setEnd(false);
   };
